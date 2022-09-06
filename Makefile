@@ -1,7 +1,7 @@
 all: _list
 
 test:
-	tox -p auto
+	tox --parallel auto --recreate
 
 clean:
 	rm -rf build dist
@@ -15,7 +15,7 @@ publish-test: clean build
 publish: clean build
 	@status=$$(git status --porcelain); \
 	if test "x$${status}" = x; then \
-		twine upload -r pypi --sign dist/*; \
+		twine upload -r fdemmer-django-all-access --sign dist/*; \
 	else \
 		echo Aborting upload: working directory is dirty >&2; \
 	fi;
