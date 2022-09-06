@@ -1,13 +1,10 @@
 django-all-access
 ===================
 
-|TravisCI Build| |Coverage| |PyPI Download| |PyPI Python Versions| |PyPI License|
+|Build| |PyPI Download| |PyPI Python Versions| |PyPI License|
 
-.. |TravisCI Build| image:: https://travis-ci.org/fdemmer/django-all-access.svg?branch=master
-    :target: https://travis-ci.org/fdemmer/django-all-access
-
-.. |Coverage| image:: https://codecov.io/gh/fdemmer/django-all-access/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/fdemmer/django-all-access
+.. |Build| image:: https://github.com/fdemmer/django-all-access/workflows/CI/badge.svg?branch=master
+    :target: https://github.com/fdemmer/django-all-access/actions?workflow=CI
 
 .. |PyPI Download| image:: https://img.shields.io/pypi/v/fdemmer-django-all-access.svg
    :target: https://pypi.python.org/pypi/fdemmer-django-all-access/
