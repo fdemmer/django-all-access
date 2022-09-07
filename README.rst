@@ -1,10 +1,13 @@
 django-all-access
 ===================
 
-|Build| |PyPI Download| |PyPI Python Versions| |PyPI License|
+|Build| |Coverage| |PyPI Download| |PyPI Python Versions| |PyPI License|
 
 .. |Build| image:: https://github.com/fdemmer/django-all-access/workflows/CI/badge.svg?branch=master
     :target: https://github.com/fdemmer/django-all-access/actions?workflow=CI
+
+.. |Coverage| image:: https://codecov.io/gh/fdemmer/django-all-access/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/fdemmer/django-all-access
 
 .. |PyPI Download| image:: https://img.shields.io/pypi/v/fdemmer-django-all-access.svg
    :target: https://pypi.python.org/pypi/fdemmer-django-all-access/

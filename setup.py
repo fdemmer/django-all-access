@@ -51,4 +51,13 @@ setup(
         'requests_oauthlib>=0.4.2',
         'oauthlib>=0.6.2',
     ],
+    extras_require={
+        'cov': [
+            'coverage[toml]~=6.0',
+        ],
+        'docs': [
+            'sphinx',
+        ],
+    },
+    options={'bdist_wheel': {'universal': '1'}},
 )

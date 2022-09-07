@@ -10,10 +10,10 @@ insert_final_newline = true
 tab_width = 4
 trim_trailing_whitespace = true
 
-[*.{py, md, rst, ini}]
+[*.{py,md,rst,ini}]
 max_line_length = 88
 
-[*.{html, css, scss, js, json, yml, yaml}]
+[*.{html,css,scss,js,json,yml,yaml}]
 tab_width = 2
 
 [*.md]
