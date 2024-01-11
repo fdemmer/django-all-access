@@ -4,7 +4,7 @@ from OAuth 1.0 and OAuth 2.0 providers such as Twitter and Facebook.
 """
 import logging
 
-__version__ = '1.3.2'
+__version__ = '1.3.3'
 
 
 class NullHandler(logging.Handler):

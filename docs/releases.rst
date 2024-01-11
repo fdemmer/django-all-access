@@ -3,6 +3,14 @@ Release History
 
 Release and change history for django-all-access
 
+v1.3.3 (2024-04-11)
+-----------------------------------
+
+Updates to test matrix and required fixes:
+
+- add Python 3.11 & 3.12
+- add Django 4.2 & 5.0
+- remove Django 4.0 & 4.1
 
 v1.3.2 (2022-09-06)
 -----------------------------------
