@@ -6,8 +6,6 @@ import logging
 
 __version__ = '1.3.2'
 
-default_app_config = 'allaccess.apps.AllAccessConfig'
-
 
 class NullHandler(logging.Handler):
     """No-op logging handler."""
