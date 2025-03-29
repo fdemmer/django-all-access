@@ -49,7 +49,7 @@ It is easiest to install this fork of django-all-access using pip:
     pip install fdemmer-django-all-access
 
 
-django-all-access requires Python 3.6+ & Django along with the following Python
+django-all-access requires Python & Django along with the following Python
 packages (which are automatically installed if necessary):
 
 .. code-block:: text
