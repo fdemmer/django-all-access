@@ -47,7 +47,7 @@ class ProviderTestCase(AllAccessTestCase):
                 self.assertEqual(getattr(provider, field), value)
 
     def test_encrypted_read(self):
-        """Encrypt/decrypt with SECRET_KEY"""
+        """Encrypt/decrypt with SECRET_KEY; changed key raises SignatureException."""
         self.provider.consumer_key = value = self.get_random_string()
 
         with self.settings(SECRET_KEY='foo'):
@@ -69,6 +69,35 @@ class ProviderTestCase(AllAccessTestCase):
         with self.settings(SECRET_KEY='foo'):
             self.provider.refresh_from_db()
             self.assertEqual(self.provider.consumer_key, value)
+
+    def test_alternative_secret_key_setting(self):
+        """
+        Encrypt/decrypt with SECRET_KEY and ALL_ACCESS_SECRET_KEY;
+        changed key raises SignatureException.
+        """
+        self.provider.consumer_key = value = self.get_random_string()
+
+        # value is encrypted with SECRET_KEY (base behaviour)
+        with self.settings(SECRET_KEY='foo'):
+            self.provider.save()
+            self.provider.refresh_from_db()
+            self.assertEqual(self.provider.consumer_key, value)
+
+        # when SECRET_KEY is changed, ALL_ACCESS_SECRET_KEY can provide the key
+        with self.settings(SECRET_KEY='A', ALL_ACCESS_SECRET_KEY='foo'):
+            self.provider.refresh_from_db()
+            self.assertEqual(self.provider.consumer_key, value)
+
+        # changing ALL_ACCESS_SECRET_KEY breaks decryption
+        with self.settings(SECRET_KEY='B', ALL_ACCESS_SECRET_KEY='zap'):
+            with self.assertRaises(SignatureException):
+                self.provider.refresh_from_db()
+
+        # ALL_ACCESS_SECRET_KEY is preferred for encryption & decryption
+        with self.settings(SECRET_KEY='C', ALL_ACCESS_SECRET_KEY='zap'):
+            self.provider.save()
+        with self.settings(SECRET_KEY='D', ALL_ACCESS_SECRET_KEY='zap'):
+            self.provider.refresh_from_db()
 
 
 class AccountAccessTestCase(AllAccessTestCase):

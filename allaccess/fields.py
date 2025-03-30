@@ -40,7 +40,8 @@ class SignedAESEncryption:
         return dict(mode=self.cipher_class.MODE_ECB)
 
     def get_key(self) -> bytes:
-        return force_bytes(settings.SECRET_KEY.zfill(32))[:32]
+        key = getattr(settings, 'ALL_ACCESS_SECRET_KEY', None) or settings.SECRET_KEY
+        return force_bytes(key.zfill(32))[:32]
 
     def get_signature(self, value: bytes) -> bytes:
         h = hmac.new(self.get_key(), msg=value, digestmod=self.digestmod)
@@ -82,7 +83,7 @@ class SignedAESEncryption:
                 not constant_time_compare(self.get_signature(cipher_text), mac):
             raise SignatureException(
                 'EncryptedField cannot be decrypted. '
-                'Did settings.SECRET_KEY change?'
+                'Did SECRET_KEY or ALL_ACCESS_SECRET_KEY change?'
             )
         cipher_text = binascii.a2b_hex(cipher_text)
         return self.cipher.decrypt(cipher_text).split(b'\x00')[0]
