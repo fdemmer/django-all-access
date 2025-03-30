@@ -1,5 +1,6 @@
 .coverage*
 .eggs
+.idea
 .project
 .pydevproject
 .tox
