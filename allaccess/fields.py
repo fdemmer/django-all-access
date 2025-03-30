@@ -39,20 +39,20 @@ class SignedAESEncryption:
     def get_cipher_kwargs(self):
         return dict(mode=self.cipher_class.MODE_ECB)
 
-    def get_key(self):
+    def get_key(self) -> bytes:
         return force_bytes(settings.SECRET_KEY.zfill(32))[:32]
 
-    def get_signature(self, value):
+    def get_signature(self, value: bytes) -> bytes:
         h = hmac.new(self.get_key(), msg=value, digestmod=self.digestmod)
         return force_bytes(h.hexdigest())
 
-    def get_padding(self, value):
+    def get_padding(self, value: bytes) -> int:
         # We always want at least 2 chars of padding (including zero byte),
         # so we could have up to block_size + 1 chars.
         mod = (len(value) + 2) % self.block_size
         return self.block_size - mod + 2
 
-    def add_padding(self, clear_text):
+    def add_padding(self, clear_text: bytes) -> bytes:
         padding = self.get_padding(clear_text)
         if padding > 0:
             return clear_text + b'\x00' + b'*' * (padding - 1)
@@ -76,7 +76,7 @@ class SignedAESEncryption:
         prefix, mac, cipher_text = self.split_value(value)
         return bool(mac)
 
-    def decrypt(self, cipher_text):
+    def decrypt(self, cipher_text: bytes) -> bytes:
         prefix, mac, cipher_text = self.split_value(cipher_text)
         if self.sign and mac and \
                 not constant_time_compare(self.get_signature(cipher_text), mac):
@@ -87,7 +87,7 @@ class SignedAESEncryption:
         cipher_text = binascii.a2b_hex(cipher_text)
         return self.cipher.decrypt(cipher_text).split(b'\x00')[0]
 
-    def encrypt(self, clear_text):
+    def encrypt(self, clear_text: bytes) -> bytes:
         clear_text = self.add_padding(clear_text)
         cipher_text = binascii.b2a_hex(self.cipher.encrypt(clear_text))
         parts = [self.prefix]
