@@ -99,6 +99,32 @@ class ProviderTestCase(AllAccessTestCase):
         with self.settings(SECRET_KEY='D', ALL_ACCESS_SECRET_KEY='zap'):
             self.provider.refresh_from_db()
 
+    def test_disable_decryption_setting(self):
+        self.provider.consumer_key = value = self.get_random_string()
+
+        with self.settings(SECRET_KEY='foo'):
+            self.provider.save()
+            self.provider.refresh_from_db()
+            self.assertEqual(self.provider.consumer_key, value)
+
+        with self.settings(
+            SECRET_KEY='foo',
+            ALL_ACCESS_DISABLED=True,
+        ):
+            provider = (
+                Provider.objects
+                .extra(select={'raw_value': 'consumer_key'})
+                .get(pk=self.provider.pk)
+            )
+            # value remains encrypted, even though SECRET_KEY would decrypt it
+            self.assertTrue(
+                provider.consumer_key.startswith('$AES$')
+            )
+            self.assertEqual(
+                provider.consumer_key,
+                provider.raw_value,
+            )
+
 
 class AccountAccessTestCase(AllAccessTestCase):
     """Custom AccountAccess methods and access token encryption."""
