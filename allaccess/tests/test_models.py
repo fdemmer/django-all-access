@@ -15,7 +15,7 @@ class ProviderTestCase(AllAccessTestCase):
     def test_save_empty_value(self):
         """None/blank key should normalize to None which is not encrypted."""
         values = [
-            (0, None),  # edge case of falsy number 0 also converts to None
+            (0, '0'),
             ('', None),
             (None, None),
             ('foo', 'foo'),

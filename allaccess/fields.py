@@ -105,28 +105,38 @@ class EncryptedField(models.TextField):
 
     def __init__(self, *args, **kwargs):
         self.cipher = self.encryption_class(*args, **kwargs)
+        self.normalize_blank = True
+        self.encrypt_blank = False
         super().__init__(*args, **kwargs)
 
-    def from_db_value(self, value, expression, connection):
-        if value is None:
-            return value
-
-        value = force_bytes(value)
-        if self.cipher.is_encrypted(value):
-            return force_str(self.cipher.decrypt(value))
-
-        return force_str(value)
-
-    def get_db_prep_value(self, value, connection=None, prepared=False):
-        if self.null:
-            # Normalize empty values to None
-            value = value or None
-
-        if value is None:
-            return None
-
+    def _encrypt(self, value: str) -> str:
+        """Encrypt `value` unless it already starts with the prefix ('$AES')."""
         value = force_bytes(value)
         if not self.cipher.is_encrypted(value):
             value = self.cipher.encrypt(value)
-
         return force_str(value)
+
+    def _decrypt(self, value: str) -> str:
+        """Encrypt `value` if it starts with the prefix ('$AES')."""
+        value = force_bytes(value)
+        if self.cipher.is_encrypted(value):
+            value = self.cipher.decrypt(value)
+        return force_str(value)
+
+    def from_db_value(self, value, expression, connection):
+        if value is not None:
+            return self._decrypt(value)
+
+    def get_prep_value(self, value):
+        # TextField.get_prep_value() calls TextField.to_python() making value str | None
+        value = super().get_prep_value(value)
+
+        # Normalize empty values to None
+        if self.null and self.normalize_blank:
+            value = value or None
+
+        if value is not None:
+            if value or self.encrypt_blank:
+                value = self._encrypt(value)
+
+        return value
