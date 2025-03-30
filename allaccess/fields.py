@@ -123,7 +123,8 @@ class EncryptedField(models.TextField):
     def _decrypt(self, value: str) -> str:
         """Encrypt `value` if it starts with the prefix ('$AES')."""
         value = force_bytes(value)
-        if self.cipher.is_encrypted(value):
+        disabled = getattr(settings, 'ALL_ACCESS_DISABLED', False)
+        if not disabled and self.cipher.is_encrypted(value):
             value = self.cipher.decrypt(value)
         return force_str(value)
 
