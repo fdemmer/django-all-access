@@ -58,23 +58,26 @@ class SignedAESEncryption:
             return clear_text + b'\x00' + b'*' * (padding - 1)
         return clear_text
 
-    def split_value(self, value):
-        #: split value from database into _, prefix, mac, cipher_text
-        parts = value.split(b'$')
-        if len(parts) == 3:
-            parts.insert(2, None)
+    def split_value(self, value: bytes) -> list[bytes]:
+        """Split the value into algorythm prefix, hmac and cipher text."""
+        # encrypted string format: <algorithm>$<optional:hmac>$<cipher_text>
+        parts = value.strip(b'$').split(b'$')
+        # insert empty hmac for backwards compatibility
+        if len(parts) == 2:
+            parts.insert(2, b'')
         return parts
 
     def is_encrypted(self, value: bytes) -> bool:
+        """Guess that the value is encrypted by checking for the algorythm prefix."""
         return value.startswith(self.prefix)
 
     def is_signed(self, value: bytes) -> bool:
-        #: value consists of 3 or 4 $ separated parts, check for mac in 2nd
-        _, prefix, mac, cipher_text = self.split_value(value)
-        return mac is not None
+        """Check if the encrypted value contains a HMAC signature."""
+        prefix, mac, cipher_text = self.split_value(value)
+        return bool(mac)
 
     def decrypt(self, cipher_text):
-        _, prefix, mac, cipher_text = self.split_value(cipher_text)
+        prefix, mac, cipher_text = self.split_value(cipher_text)
         if self.sign and mac and \
                 not constant_time_compare(self.get_signature(cipher_text), mac):
             raise SignatureException(
