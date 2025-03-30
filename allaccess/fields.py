@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import binascii
 import hashlib
 import hmac
@@ -63,10 +65,10 @@ class SignedAESEncryption:
             parts.insert(2, None)
         return parts
 
-    def is_encrypted(self, value):
+    def is_encrypted(self, value: bytes) -> bool:
         return value.startswith(self.prefix)
 
-    def is_signed(self, value):
+    def is_signed(self, value: bytes) -> bool:
         #: value consists of 3 or 4 $ separated parts, check for mac in 2nd
         _, prefix, mac, cipher_text = self.split_value(value)
         return mac is not None
