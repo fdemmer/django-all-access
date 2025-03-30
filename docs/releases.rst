@@ -3,6 +3,18 @@ Release History
 
 Release and change history for django-all-access
 
+v1.3.4 (2025-03-30)
+-----------------------------------
+
+Rewrite parts of ``EncryptedField`` overloading ``get_prep_value()`` instead of
+``get_db_prep_value()``, preventing the "normalization" of the integer 0 to
+``None``.
+
+Updates to test matrix:
+
+- add Python 3.13
+- add Django 5.1 & 5.2
+
 v1.3.3 (2024-04-11)
 -----------------------------------
 
