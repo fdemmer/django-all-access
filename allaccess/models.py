@@ -28,11 +28,6 @@ class Provider(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        self.consumer_key = self.consumer_key or None
-        self.consumer_secret = self.consumer_secret or None
-        super().save(*args, **kwargs)
-
     def natural_key(self):
         return self.name,
 
@@ -68,10 +63,6 @@ class AccountAccess(models.Model):
 
     def __str__(self):
         return f'{self.provider} {self.identifier}'
-
-    def save(self, *args, **kwargs):
-        self.access_token = self.access_token or None
-        super().save(*args, **kwargs)
 
     def natural_key(self):
         return (self.identifier,) + self.provider.natural_key()
