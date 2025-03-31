@@ -3,6 +3,13 @@ Release History
 
 Release and change history for django-all-access
 
+
+v1.4.0 (2025-03-31)
+-----------------------------------
+
+Add settings variables ``ALL_ACCESS_SECRET_KEY`` and ``ALL_ACCESS_DISABLED``.
+
+
 v1.3.4 (2025-03-30)
 -----------------------------------
 
@@ -14,6 +21,7 @@ Updates to test matrix:
 
 - add Python 3.13
 - add Django 5.1 & 5.2
+
 
 v1.3.3 (2024-04-11)
 -----------------------------------
